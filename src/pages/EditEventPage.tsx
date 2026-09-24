@@ -32,7 +32,12 @@ export function EditEventPage() {
       <ErrorBanner message={loadError ?? saveError} />
       {event ? (
         <EventForm
-          initial={event}
+          initial={{
+            name: event.name,
+            description: event.description,
+            company: event.company,
+            color: event.color,
+          }}
           submitLabel="Save"
           onSubmit={save}
           onCancel={() => navigate('/')}
