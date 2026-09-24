@@ -1,0 +1,18 @@
+interface Props {
+  message: string | null
+  onRetry?: () => void
+}
+
+export function ErrorBanner({ message, onRetry }: Props) {
+  if (!message) return null
+  return (
+    <div role="alert" className="error">
+      {message}
+      {onRetry && (
+        <button type="button" onClick={onRetry}>
+          Retry
+        </button>
+      )}
+    </div>
+  )
+}

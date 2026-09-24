@@ -1,0 +1,4 @@
+{
+  "name": "events-app",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22"
+}

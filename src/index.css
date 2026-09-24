@@ -1,0 +1,83 @@
+/* Deliberately minimal: the assignment says not to over-style. */
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 1rem;
+}
+
+form {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 400px;
+}
+
+.field {
+  display: grid;
+  gap: 0.2rem;
+}
+
+label {
+  text-transform: capitalize;
+}
+
+input[aria-invalid='true'] {
+  border-color: crimson;
+}
+
+.field-error,
+.error {
+  color: crimson;
+}
+
+.error {
+  border: 1px solid crimson;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.error button {
+  margin-left: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.4rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 1px solid #999;
+  vertical-align: middle;
+}
+
+/* No padding on the dialog itself: a click on padding would count as a backdrop click. */
+dialog {
+  max-width: 400px;
+  padding: 0;
+}
+
+.dialog-body {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.image-placeholder {
+  width: 320px;
+  height: 240px;
+  display: grid;
+  place-items: center;
+  background: #eee;
+  color: #666;
+}
