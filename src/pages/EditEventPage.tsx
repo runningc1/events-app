@@ -1,36 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { getOne, update } from '../api/eventsApi'
+import { update } from '../api/eventsApi'
 import { ErrorBanner } from '../components/ErrorBanner'
 import { EventForm } from '../components/EventForm'
-import type { EventFormValues, EventRecord } from '../types'
-import { applyEdits, toFormValues } from '../utils/events'
+import { useEvent } from '../hooks/useEvent'
+import type { EventFormValues } from '../types'
 
 export function EditEventPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [event, setEvent] = useState<EventRecord | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  // `stale` stops a slow response for a previous id from overwriting the current one.
-  useEffect(() => {
-    let stale = false
-    getOne(id!)
-      .then((e) => !stale && setEvent(e))
-      .catch((err: Error) => !stale && setError(`Could not load event ${id}. ${err.message}`))
-    return () => {
-      stale = true
-    }
-  }, [id])
+  const { event, error: loadError } = useEvent(id!)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   // GET then PUT: json-server PUT replaces the record, so a 4-field PUT would wipe the rest
   // and PATCH is not what the assignment asks for. Then back to the list, which refetches.
   const save = async (values: EventFormValues) => {
-    setError(null)
+    setSaveError(null)
     try {
-      await update(event!.id, applyEdits(event!, values))
+      await update(event!.id, { ...event!, ...values })
     } catch (err) {
-      setError(`Could not update event. ${(err as Error).message}`)
+      setSaveError(`Could not update event. ${(err as Error).message}`)
       return false
     }
     navigate('/')
@@ -40,16 +29,16 @@ export function EditEventPage() {
   return (
     <main>
       <h1>Edit event</h1>
-      <ErrorBanner message={error} />
+      <ErrorBanner message={loadError ?? saveError} />
       {event ? (
         <EventForm
-          initial={toFormValues(event)}
+          initial={event}
           submitLabel="Save"
           onSubmit={save}
           onCancel={() => navigate('/')}
         />
       ) : (
-        !error && <p>Loading...</p>
+        !loadError && <p>Loading...</p>
       )}
       <Link to="/">Back to events</Link>
     </main>

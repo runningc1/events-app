@@ -1,7 +1,4 @@
-/**
- * Shape of an event record as stored by rf-json-server.
- * Field list taken from the sample POST payload in the assignment PDF.
- */
+// Shape of an event record as stored by rf-json-server; fields from the PDF's sample POST.
 export interface EventRecord {
   id: number
   name: string
@@ -18,13 +15,13 @@ export interface EventRecord {
   createdOn: string
 }
 
-/** A record without a server-assigned id. POST bodies must never include id. */
+// A record without a server-assigned id. POST bodies must never include id.
 export type NewEvent = Omit<EventRecord, 'id'>
 
-/** Route params arrive as strings; records carry numbers. The API accepts either. */
+// Route params arrive as strings; records carry numbers. The API accepts either.
 export type EventId = number | string
 
-/** The four fields the assignment requires the user to be able to enter and edit. */
+// The four fields the assignment requires the user to be able to enter and edit.
 export const EVENT_FIELDS = ['name', 'description', 'company', 'color'] as const
 
 export type EventFormValues = Record<(typeof EVENT_FIELDS)[number], string>

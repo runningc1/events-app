@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as api from '../api/eventsApi'
-import type { ApiError } from '../api/eventsApi'
 import type { EventRecord, NewEvent } from '../types'
 import { sortByCompany } from '../utils/sort'
 
@@ -9,7 +8,7 @@ import { sortByCompany } from '../utils/sort'
 export function useEvents() {
   const [events, setEvents] = useState<EventRecord[] | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [pendingIds, setPendingIds] = useState<ReadonlySet<number>>(new Set())
+  const [pendingIds, setPendingIds] = useState<number[]>([])
   const latest = useRef(0)
 
   // Resolves true when the list was refreshed. Overlapping reloads can resolve out of
@@ -42,7 +41,7 @@ export function useEvents() {
       try {
         await action()
       } catch (err) {
-        if ((err as ApiError).status === 404) await reload()
+        if ((err as api.ApiError).status === 404) await reload()
         setError(`Could not ${label}. ${(err as Error).message}`)
         return false
       }
@@ -60,15 +59,11 @@ export function useEvents() {
   // so a double-click cannot send a second DELETE that 404s.
   const remove = useCallback(
     async (id: number) => {
-      setPendingIds((s) => new Set(s).add(id))
+      setPendingIds((ids) => [...ids, id])
       try {
         return await mutate('delete event', () => api.remove(id))
       } finally {
-        setPendingIds((s) => {
-          const next = new Set(s)
-          next.delete(id)
-          return next
-        })
+        setPendingIds((ids) => ids.filter((pending) => pending !== id))
       }
     },
     [mutate],

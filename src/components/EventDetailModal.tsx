@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import { getOne } from '../api/eventsApi'
-import type { EventRecord } from '../types'
+import { useEvent } from '../hooks/useEvent'
 import { ErrorBanner } from './ErrorBanner'
 import { EventImage } from './EventImage'
 
@@ -11,8 +10,7 @@ export function EventDetailModal() {
   const { id } = useParams()
   const navigate = useNavigate()
   const dialogRef = useRef<HTMLDialogElement>(null)
-  const [event, setEvent] = useState<EventRecord | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const { event, error } = useEvent(id!)
 
   const close = () => navigate('/')
 
@@ -21,24 +19,12 @@ export function EventDetailModal() {
     if (dialog && !dialog.open) dialog.showModal()
   }, [])
 
-  // `stale` stops a slow response for a previous id from overwriting the current one.
-  useEffect(() => {
-    let stale = false
-    getOne(id!)
-      .then((e) => !stale && setEvent(e))
-      .catch((err: Error) => !stale && setError(`Could not load event ${id}. ${err.message}`))
-    return () => {
-      stale = true
-    }
-  }, [id])
-
   // A click whose target is the <dialog> itself landed on the backdrop, because
   // .dialog-body covers the whole dialog (dialog has no padding of its own).
   return (
     <dialog
       ref={dialogRef}
-      aria-labelledby={event ? 'event-title' : undefined}
-      aria-label={event ? undefined : 'Event details'}
+      aria-label={event?.name ?? 'Event details'}
       onClose={close}
       onClick={(e) => e.target === dialogRef.current && close()}
     >
@@ -47,7 +33,7 @@ export function EventDetailModal() {
         {!error && !event && <p>Loading...</p>}
         {event && (
           <>
-            <h2 id="event-title">{event.name}</h2>
+            <h2>{event.name}</h2>
             <p>{event.description}</p>
             <EventImage src={event.image} alt={event.name} />
           </>

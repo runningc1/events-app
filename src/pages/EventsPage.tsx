@@ -11,7 +11,7 @@ export function EventsPage() {
   return (
     <main>
       <h1>Events</h1>
-      <ErrorBanner message={error} onRetry={() => void reload()} />
+      <ErrorBanner message={error} onRetry={reload} />
 
       <section>
         <h2>Add event</h2>
@@ -25,7 +25,7 @@ export function EventsPage() {
       <section>
         <h2>All events</h2>
         {events ? (
-          <EventList events={events} pendingIds={pendingIds} onDelete={(id) => void remove(id)} />
+          <EventList events={events} pendingIds={pendingIds} onDelete={remove} />
         ) : (
           !error && <p>Loading...</p>
         )}

@@ -1,4 +1,4 @@
-import type { EventFormValues, EventRecord, NewEvent } from '../types'
+import type { EventFormValues, NewEvent } from '../types'
 
 // The one place form input is cleaned up. EventForm calls it before validating and before
 // handing values to a page, so every save path stores the same shape.
@@ -21,17 +21,4 @@ export const buildNewEvent = (values: EventFormValues, now: Date = new Date()): 
   address: '',
   image: '',
   createdOn: now.toISOString(),
-})
-
-// Merges edited fields into the existing record so PUT sends every field.
-export const applyEdits = (existing: EventRecord, values: EventFormValues): EventRecord => ({
-  ...existing,
-  ...values,
-})
-
-export const toFormValues = (e: EventRecord): EventFormValues => ({
-  name: e.name,
-  description: e.description,
-  company: e.company,
-  color: e.color,
 })

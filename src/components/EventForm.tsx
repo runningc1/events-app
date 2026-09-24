@@ -2,7 +2,7 @@ import { useId, useState, type FormEvent } from 'react'
 import { EVENT_FIELDS, type EventFormErrors, type EventFormValues } from '../types'
 import { NAMED_COLORS } from '../utils/colors'
 import { normalizeValues } from '../utils/events'
-import { isValid, validateEvent } from '../utils/validate'
+import { validateEvent } from '../utils/validate'
 
 interface Props {
   initial?: EventFormValues
@@ -39,7 +39,7 @@ export function EventForm({
     const normalized = normalizeValues(values)
     const found = validateEvent(normalized)
     setErrors(found)
-    if (!isValid(found)) return
+    if (Object.keys(found).length > 0) return
     setSubmitting(true)
     const ok = await onSubmit(normalized)
     setSubmitting(false)

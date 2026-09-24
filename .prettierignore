@@ -2,4 +2,3 @@ dist
 coverage
 node_modules
 docs/*.svg
-CODE-REVIEW.md

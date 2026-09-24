@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { makeEvent } from '../test/server'
-import { applyEdits, buildNewEvent, normalizeValues, toFormValues } from './events'
+import { buildNewEvent, normalizeValues } from './events'
 
 const raw = { name: ' Launch ', description: ' Big day ', company: ' ACME ', color: ' Red ' }
 const values = { name: 'Launch', description: 'Big day', company: 'ACME', color: 'red' }
@@ -46,40 +45,5 @@ describe('buildNewEvent', () => {
       'phone',
       'time',
     ])
-  })
-})
-
-describe('applyEdits', () => {
-  it('overwrites only the four editable fields and keeps the rest, including id', () => {
-    const existing = makeEvent({ id: 7, email: 'keep@me.com' })
-    const edited = applyEdits(existing, values)
-    expect(edited).toEqual({
-      ...existing,
-      name: 'Launch',
-      description: 'Big day',
-      company: 'ACME',
-      color: 'red',
-    })
-    expect(edited.id).toBe(7)
-    expect(edited.email).toBe('keep@me.com')
-  })
-
-  it('does not mutate the existing record', () => {
-    const existing = makeEvent()
-    applyEdits(existing, values)
-    expect(existing.name).toBe('Event 1')
-  })
-})
-
-describe('toFormValues', () => {
-  it('extracts exactly the four editable fields', () => {
-    expect(
-      toFormValues(makeEvent({ name: 'A', description: 'B', company: 'C', color: 'teal' })),
-    ).toEqual({
-      name: 'A',
-      description: 'B',
-      company: 'C',
-      color: 'teal',
-    })
   })
 })

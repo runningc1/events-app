@@ -40,10 +40,11 @@ Import the repository (Create > Import from GitHub) or upload the folder. `.devc
 src/
   api/eventsApi.ts          fetch wrapper: getAll, getOne, create, update, remove
   hooks/useEvents.ts        loads the list, sorts by company, refetches after add/delete
+  hooks/useEvent.ts         loads one event for the modal and the edit page
   utils/validate.ts         validateEvent: required fields, length, CSS named color
   utils/colors.ts           the 148 CSS named colors
   utils/sort.ts             sortByCompany
-  utils/events.ts           buildNewEvent (POST body), applyEdits (PUT body)
+  utils/events.ts           normalizeValues, buildNewEvent (POST body)
   components/EventList.tsx  table: name (link to detail), description, company, color, edit, delete
   components/EventForm.tsx  shared by add and edit; validates on submit
   components/EventDetailModal.tsx  routed <dialog> at /events/:id
@@ -66,7 +67,7 @@ docs/
 | Delete button; list updates                                      | 5               | `EventList.tsx`, `useEvents.remove`                          | `3-delete.test.tsx`                             |
 | Error handling for API failures                                  | 8               | `eventsApi.ts` (`ApiError`), `ErrorBanner.tsx`, every caller | `4-errors.test.tsx`, `api/eventsApi.test.ts`    |
 | Sort by company after loading                                    | 3               | `utils/sort.ts`, called in `useEvents.reload`                | `5-sort.test.tsx`, `utils/sort.test.ts`         |
-| Update name, description, company, color                         | 6               | `EditEventPage.tsx`, `applyEdits`                            | `6-update.test.tsx`                             |
+| Update name, description, company, color                         | 6               | `EditEventPage.tsx`, `useEvent`                              | `6-update.test.tsx`                             |
 | Individual event (name, description) in a modal via react-router | 2, 7            | `EventDetailModal.tsx`, route `/events/:id`                  | `7-detail.test.tsx`                             |
 | Validate inputs                                                  | 9               | `utils/validate.ts`, `EventForm.tsx`                         | `8-validate.test.tsx`, `utils/validate.test.ts` |
 

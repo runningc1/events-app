@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { EventFormValues } from '../types'
 import { isNamedColor, NAMED_COLORS } from './colors'
-import { isValid, MAX_LENGTH, validateEvent } from './validate'
+import { MAX_LENGTH, validateEvent } from './validate'
 
 const valid: EventFormValues = {
   name: 'Launch',
@@ -13,7 +13,6 @@ const valid: EventFormValues = {
 describe('validateEvent', () => {
   it('accepts a fully valid form', () => {
     expect(validateEvent(valid)).toEqual({})
-    expect(isValid(validateEvent(valid))).toBe(true)
   })
 
   it.each(['name', 'description', 'company', 'color'] as const)('requires %s', (field) => {
@@ -30,7 +29,6 @@ describe('validateEvent', () => {
       color: '',
     })
     expect(Object.keys(errors).sort()).toEqual(['color', 'company', 'description', 'name'])
-    expect(isValid(errors)).toBe(false)
   })
 
   it('rejects values longer than the maximum', () => {

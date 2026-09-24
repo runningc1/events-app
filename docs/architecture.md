@@ -19,8 +19,10 @@ flowchart TB
   EventsPage --> ErrorBanner
   EditEventPage --> EventForm
   EditEventPage --> ErrorBanner
+  EditEventPage --> useEvent[useEvent hook]
   EditEventPage --> api
-  Modal --> api
+  Modal --> useEvent
+  useEvent --> api
   Modal --> EventImage
   Modal --> ErrorBanner
 
@@ -131,14 +133,14 @@ sequenceDiagram
   participant S as rf-json-server
 
   U->>E: open /events/{id}/edit
-  E->>A: getOne(id)
+  E->>A: getOne(id)  (via useEvent)
   A->>S: GET /events/{id}
   S-->>A: 200 record
-  E->>F: initial = name, description, company, color
+  E->>F: initial = the loaded record
   U->>F: change fields, click Save
   F->>F: validateEvent(values)
   F->>E: onSubmit(values)
-  E->>E: applyEdits(record, values)  (full record, id kept)
+  E->>E: merge values into the loaded record  (full record, id kept)
   E->>A: update(id, record)
   A->>S: PUT /events/{id}  (json-server PUT replaces the whole record)
   S-->>A: 200
@@ -158,7 +160,7 @@ sequenceDiagram
   U->>R: click event name (Link to /events/{id})
   R->>M: render in EventsPage's Outlet
   M->>M: dialog.showModal()
-  M->>A: getOne(id)
+  M->>A: getOne(id)  (via useEvent)
   A->>S: GET /events/{id}
   S-->>A: 200 record
   M-->>U: name, description, image (or "Image not found")

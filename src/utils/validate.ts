@@ -18,5 +18,3 @@ export function validateEvent(values: EventFormValues): EventFormErrors {
   }
   return errors
 }
-
-export const isValid = (errors: EventFormErrors): boolean => Object.keys(errors).length === 0

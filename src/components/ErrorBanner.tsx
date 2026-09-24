@@ -1,6 +1,6 @@
 interface Props {
   message: string | null
-  onRetry?: () => void
+  onRetry?: () => unknown
 }
 
 export function ErrorBanner({ message, onRetry }: Props) {

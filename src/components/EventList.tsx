@@ -4,8 +4,8 @@ import { isNamedColor } from '../utils/colors'
 
 interface Props {
   events: EventRecord[]
-  pendingIds: ReadonlySet<number>
-  onDelete: (id: number) => void
+  pendingIds: number[]
+  onDelete: (id: number) => unknown
 }
 
 export function EventList({ events, pendingIds, onDelete }: Props) {
@@ -41,7 +41,7 @@ export function EventList({ events, pendingIds, onDelete }: Props) {
               <button
                 type="button"
                 onClick={() => onDelete(e.id)}
-                disabled={pendingIds.has(e.id)}
+                disabled={pendingIds.includes(e.id)}
                 aria-label={`Delete ${e.name}`}
               >
                 Delete
