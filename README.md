@@ -4,7 +4,7 @@ Front end for the rf-json-server events API. React 19, TypeScript, Vite, react-r
 
 ## Run locally
 
-Requires Node 22.12 or newer (`node --version`; `.nvmrc` says 22).
+Requires Node 20.12 or newer (`node --version`; `.nvmrc` says 20). Pinned to Vite 6 and vitest 3 so it runs on the Node 20 that CodeSandbox Devboxes ship with.
 
 ```sh
 npm install
@@ -32,7 +32,7 @@ VITE_API_BASE=https://rf-json-server.herokuapp.com/events-2 npm run dev
 
 ## Run on CodeSandbox
 
-Import the repository (Create > Import from GitHub) or upload the folder. `.devcontainer/devcontainer.json` pins Node 22 for the devbox. The start task is `npm run dev`.
+CodeSandbox no longer imports repositories directly. Create a React (TS) Devbox from the template, then in its terminal: `git clone https://github.com/runningc1/events-app.git /tmp/src && find . -mindepth 1 -maxdepth 1 ! -name node_modules -exec rm -rf {} + && cp -a /tmp/src/. . && npm install && npm test`. `.codesandbox/tasks.json` runs `npm run dev` on port 5173.
 
 ## Layout
 
