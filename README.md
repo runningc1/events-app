@@ -2,8 +2,6 @@
 
 Front end for the rf-json-server events API. React 19, JavaScript, Vite, react-router 7. No backend code in this repo; every CRUD operation goes to `https://rf-json-server.herokuapp.com/events`.
 
-Live: https://runningc1.github.io/events-app/ (GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to main).
-
 ## Run locally
 
 Requires Node 20.12 or newer (`node --version`; `.nvmrc` says 20). Pinned to Vite 6 and vitest 3 so it runs on the Node 20 that CodeSandbox Devboxes ship with.
