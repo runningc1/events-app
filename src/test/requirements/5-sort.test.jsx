@@ -33,8 +33,7 @@ describe('5. Sort by company', () => {
   })
 
   it('keeps the list sorted after adding an event that belongs in the middle', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = await fillForm({ name: 'Mid', description: 'd', company: 'Delta', color: 'red' })
     await user.click(screen.getByRole('button', { name: 'Add' }))
     await screen.findByRole('link', { name: 'Mid' })

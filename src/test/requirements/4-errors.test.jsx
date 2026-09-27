@@ -72,9 +72,8 @@ describe('4. API error handling', () => {
   })
 
   describe('adding', () => {
-    it('shows an error, keeps the typed values, and leaves the list unchanged when POST fails', async () => {
-      renderApp()
-      await screen.findByRole('table')
+    it('shows an error, keeps the typed values, and saves nothing when POST fails', async () => {
+      renderApp('/events/add')
       failWith('post', 500)
 
       const user = await fillForm(VALID)
@@ -83,25 +82,22 @@ describe('4. API error handling', () => {
       expect(await screen.findByRole('alert')).toHaveTextContent('Could not add event')
       expect(screen.getByLabelText('name')).toHaveValue('Launch')
       expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
-      expect(screen.queryByRole('link', { name: 'Launch' })).not.toBeInTheDocument()
       expect(db).toHaveLength(3)
     })
 
-    it('keeps the typed values when the POST succeeds but the refetch fails', async () => {
-      renderApp()
-      await screen.findByRole('table')
+    it('saves, then shows the list error with Retry when the list fails to load afterwards', async () => {
+      renderApp('/events/add')
       const user = await fillForm(VALID)
       failWith('get', 500)
       await user.click(screen.getByRole('button', { name: 'Add' }))
 
       expect(await screen.findByRole('alert')).toHaveTextContent('Could not load events')
-      expect(screen.getByLabelText('name')).toHaveValue('Launch')
+      expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
       expect(db.at(-1)?.name).toBe('Launch')
     })
 
     it('recovers: the same values submit successfully once the API is back', async () => {
-      renderApp()
-      await screen.findByRole('table')
+      renderApp('/events/add')
       failNetwork('post')
       const user = await fillForm(VALID)
       await user.click(screen.getByRole('button', { name: 'Add' }))

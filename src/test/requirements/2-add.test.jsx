@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { fillForm, renderApp, VALID } from '../helpers'
 import { captureRequests, db, seed, slow } from '../server'
@@ -10,8 +10,7 @@ describe('2. Add event', () => {
   beforeEach(() => seed())
 
   it('POSTs the four fields without an id and shows the new event in the list', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const requests = captureRequests()
 
     const user = await fillForm({
@@ -37,8 +36,7 @@ describe('2. Add event', () => {
   })
 
   it('refetches the list after adding, so the new row comes from the server', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const requests = captureRequests()
 
     const user = await fillForm(VALID)
@@ -49,21 +47,34 @@ describe('2. Add event', () => {
     expect(screen.getAllByRole('row')).toHaveLength(5)
   })
 
-  it('clears the form after a successful add', async () => {
-    renderApp()
-    await screen.findByRole('table')
+  it('returns to the list after a successful add', async () => {
+    renderApp('/events/add')
     const user = await fillForm(VALID)
     await user.click(screen.getByRole('button', { name: 'Add' }))
 
     await screen.findByRole('link', { name: 'Launch' })
-    for (const field of ['name', 'description', 'company', 'color']) {
-      expect(screen.getByLabelText(field)).toHaveValue('')
-    }
+    expect(screen.queryByRole('button', { name: 'Add' })).not.toBeInTheDocument()
+  })
+
+  it('the list page links to the add page with a plus sign', async () => {
+    renderApp()
+    await screen.findByRole('table')
+    const link = screen.getByRole('link', { name: 'Add event' })
+    expect(link).toHaveTextContent('+')
+    expect(link).toHaveAttribute('href', '/events/add')
+  })
+
+  it('Cancel returns to the list without saving', async () => {
+    renderApp('/events/add')
+    const requests = captureRequests()
+    const user = await fillForm(VALID)
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(await screen.findByRole('table')).toBeInTheDocument()
+    expect(requests.filter((r) => r.method === 'POST')).toHaveLength(0)
   })
 
   it('trims surrounding whitespace before saving', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = await fillForm({
       name: '  Padded  ',
       description: ' d ',
@@ -82,20 +93,18 @@ describe('2. Add event', () => {
   })
 
   it('disables the submit button while the request is in flight', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     slow('post')
     const user = await fillForm(VALID)
     const button = screen.getByRole('button', { name: 'Add' })
     await user.click(button)
     expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled()
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled())
+    expect(await screen.findByRole('link', { name: 'Launch' })).toBeInTheDocument()
   })
 
   it('adds a second event into an empty list', async () => {
     seed([])
-    renderApp()
-    await screen.findByText('No events yet.')
+    renderApp('/events/add')
     const user = await fillForm({ name: 'Only', description: 'd', company: 'ACME', color: 'red' })
     await user.click(screen.getByRole('button', { name: 'Add' }))
     expect(await screen.findByRole('link', { name: 'Only' })).toBeInTheDocument()

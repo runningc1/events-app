@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router'
 import { EventDetailModal } from './components/EventDetailModal'
+import { AddEventPage } from './pages/AddEventPage'
 import { EditEventPage } from './pages/EditEventPage'
 import { EventsPage } from './pages/EventsPage'
 
@@ -10,6 +11,7 @@ export default function App() {
       <Route path="/" element={<EventsPage />}>
         <Route path="events/:id" element={<EventDetailModal />} />
       </Route>
+      <Route path="/events/add" element={<AddEventPage />} />
       <Route path="/events/:id/edit" element={<EditEventPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -35,8 +35,7 @@ export function useEvents() {
     void reload()
   }, [reload])
 
-  // add and remove differ only in the request they send. mutate holds the shared part:
-  // run it, then refetch. Resolves false if either step failed so callers can react.
+  // Run a mutation, then refetch. Resolves false if either step failed so callers can react.
   // A 404 means the server changed underneath us, so the list is refetched even on failure.
   const mutate = useCallback(
     async (label, action) => {
@@ -52,8 +51,6 @@ export function useEvents() {
     [reload],
   )
 
-  const add = useCallback((event) => mutate('add event', () => api.create(event)), [mutate])
-
   // pendingIds lets the list disable a row's Delete button while its request is in flight,
   // so a double-click cannot send a second DELETE that 404s.
   const remove = useCallback(
@@ -68,5 +65,5 @@ export function useEvents() {
     [mutate],
   )
 
-  return { events, error, pendingIds, reload, add, remove }
+  return { events, error, pendingIds, reload, remove }
 }

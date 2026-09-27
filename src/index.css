@@ -6,6 +6,19 @@ body {
   padding: 1rem;
 }
 
+header.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.add-link {
+  font-size: 2rem;
+  line-height: 1;
+  text-decoration: none;
+  padding: 0 0.5rem;
+}
+
 form {
   display: grid;
   gap: 0.5rem;

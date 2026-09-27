@@ -10,8 +10,7 @@ describe('8. Input validation in the form', () => {
   beforeEach(() => seed())
 
   it('submitting an empty form shows Required under every field and sends nothing', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const requests = captureRequests()
 
     await userEvent.click(screen.getByRole('button', { name: 'Add' }))
@@ -27,8 +26,7 @@ describe('8. Input validation in the form', () => {
   })
 
   it('flags only the fields that are wrong', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = await fillForm({
       ...VALID,
       company: '   ',
@@ -45,8 +43,7 @@ describe('8. Input validation in the form', () => {
   it.each(['#ff0000', 'rgb(255, 0, 0)', 'reddish', 'light blue', 'Test 2 steelblue', 'steelblue!'])(
     'rejects color %j',
     async (color) => {
-      renderApp()
-      await screen.findByRole('table')
+      renderApp('/events/add')
       const requests = captureRequests()
       const user = await fillForm({ ...VALID, color })
       await user.click(screen.getByRole('button', { name: 'Add' }))
@@ -56,8 +53,7 @@ describe('8. Input validation in the form', () => {
   )
 
   it('offers every CSS named color as a suggestion on the color field and says what is expected', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const input = screen.getByLabelText('color')
     expect(input).toHaveAttribute('placeholder', expect.stringMatching(/red, steelblue/))
     const listId = input.getAttribute('list')
@@ -67,8 +63,7 @@ describe('8. Input validation in the form', () => {
   })
 
   it.each(['red', 'Red', 'STEELBLUE', ' teal '])('accepts color %j', async (color) => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = await fillForm({ ...VALID, color })
     await user.click(screen.getByRole('button', { name: 'Add' }))
     expect(await screen.findByRole('link', { name: 'Launch' })).toBeInTheDocument()
@@ -76,8 +71,7 @@ describe('8. Input validation in the form', () => {
   })
 
   it('clears a field error as soon as the user edits that field', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = userEvent.setup()
     await user.click(screen.getByRole('button', { name: 'Add' }))
     expect(screen.getAllByText('Required')).toHaveLength(4)
@@ -89,8 +83,7 @@ describe('8. Input validation in the form', () => {
   })
 
   it('a field fixed after an error submits successfully', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = await fillForm({ ...VALID, color: 'nope' })
     await user.click(screen.getByRole('button', { name: 'Add' }))
     await screen.findByText(/named color/)
@@ -115,8 +108,7 @@ describe('8. Input validation in the form', () => {
   })
 
   it('rejects a value over the length limit', async () => {
-    renderApp()
-    await screen.findByRole('table')
+    renderApp('/events/add')
     const user = await fillForm({ ...VALID, name: 'x'.repeat(201) })
     await user.click(screen.getByRole('button', { name: 'Add' }))
     expect(await screen.findByText(/200 characters or fewer/)).toBeInTheDocument()
