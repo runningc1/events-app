@@ -1,14 +1,7 @@
 import { Link } from 'react-router'
-import type { EventRecord } from '../types'
 import { isNamedColor } from '../utils/colors'
 
-interface Props {
-  events: EventRecord[]
-  pendingIds: number[]
-  onDelete: (id: number) => void
-}
-
-export function EventList({ events, pendingIds, onDelete }: Props) {
+export function EventList({ events, pendingIds, onDelete }) {
   if (events.length === 0) return <p>No events yet.</p>
   return (
     <table>

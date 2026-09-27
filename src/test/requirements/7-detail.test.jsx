@@ -52,7 +52,7 @@ describe('7. Individual event modal (routed)', () => {
   it('closing the dialog natively (Escape) also navigates back to /', async () => {
     renderApp('/events/1')
     const dialog = await screen.findByRole('dialog')
-    act(() => (dialog as HTMLDialogElement).close())
+    act(() => dialog.close())
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   })
 

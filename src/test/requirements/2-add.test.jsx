@@ -23,7 +23,7 @@ describe('2. Add event', () => {
     await user.click(screen.getByRole('button', { name: 'Add' }))
 
     expect(await screen.findByRole('link', { name: 'Launch' })).toBeInTheDocument()
-    const post = requests.find((r) => r.method === 'POST')!
+    const post = requests.find((r) => r.method === 'POST')
     const body = await post.json()
     expect(body).toMatchObject({
       name: 'Launch',

@@ -1,6 +1,6 @@
 # Events app
 
-Front end for the rf-json-server events API. React 19, TypeScript, Vite, react-router 7. No backend code in this repo; every CRUD operation goes to `https://rf-json-server.herokuapp.com/events`.
+Front end for the rf-json-server events API. React 19, JavaScript, Vite, react-router 7. No backend code in this repo; every CRUD operation goes to `https://rf-json-server.herokuapp.com/events`.
 
 Live: https://runningc1.github.io/events-app/ (GitHub Pages, deployed by `.github/workflows/deploy.yml` on every push to main).
 
@@ -19,7 +19,6 @@ Other scripts:
 npm test               # unit and integration tests (vitest, jsdom, msw)
 npm run test:watch
 npm run test:coverage
-npm run typecheck      # tsc
 npm run lint           # oxlint
 npm run format         # prettier
 npm run build          # production build to dist/
@@ -34,26 +33,26 @@ VITE_API_BASE=https://rf-json-server.herokuapp.com/events-2 npm run dev
 
 ## Run on CodeSandbox
 
-CodeSandbox no longer imports repositories directly. Create a React (TS) Devbox from the template, then in its terminal: `git clone https://github.com/runningc1/events-app.git /tmp/src && find . -mindepth 1 -maxdepth 1 ! -name node_modules -exec rm -rf {} + && cp -a /tmp/src/. . && npm install && npm test`. `.codesandbox/tasks.json` runs `npm run dev` on port 5173.
+CodeSandbox no longer imports repositories directly. Create a React Devbox from the template, then in its terminal: `git clone https://github.com/runningc1/events-app.git /tmp/src && find . -mindepth 1 -maxdepth 1 ! -name node_modules -exec rm -rf {} + && cp -a /tmp/src/. . && npm install && npm test`. `.codesandbox/tasks.json` runs `npm run dev` on port 5173.
 
 ## Layout
 
 ```
 src/
-  api/eventsApi.ts          axios calls: getAll, getOne, create, update, remove
-  hooks/useEvents.ts        loads the list, sorts by company, refetches after add/delete
-  hooks/useEvent.ts         loads one event for the modal and the edit page
-  utils/validate.ts         validateEvent: required fields, length, CSS named color
-  utils/colors.ts           the 148 CSS named colors
-  utils/sort.ts             sortByCompany
-  utils/events.ts           normalizeValues, buildNewEvent (POST body)
-  components/EventList.tsx  table: name (link to detail), description, company, color, edit, delete
-  components/EventForm.tsx  shared by add and edit; validates on submit
-  components/EventDetailModal.tsx  routed <dialog> at /events/:id
-  components/ErrorBanner.tsx
-  pages/EventsPage.tsx      /            list + add form; hosts the modal route
-  pages/EditEventPage.tsx   /events/:id/edit
-  App.tsx                   routes
+  api/eventsApi.js          axios calls: getAll, getOne, create, update, remove
+  hooks/useEvents.js        loads the list, sorts by company, refetches after add/delete
+  hooks/useEvent.js         loads one event for the modal and the edit page
+  utils/validate.js         validateEvent: required fields, length, CSS named color
+  utils/colors.js           the 148 CSS named colors
+  utils/sort.js             sortByCompany
+  utils/events.js           normalizeValues, buildNewEvent (POST body)
+  components/EventList.jsx  table: name (link to detail), description, company, color, edit, delete
+  components/EventForm.jsx  shared by add and edit; validates on submit
+  components/EventDetailModal.jsx  routed <dialog> at /events/:id
+  components/ErrorBanner.jsx
+  pages/EventsPage.jsx      /            list + add form; hosts the modal route
+  pages/EditEventPage.jsx   /events/:id/edit
+  App.jsx                   routes
   test/                     msw server, helpers, and one test file per requirement
 docs/
   architecture.md           module map, routes, data flow per operation, error handling, validation
@@ -64,14 +63,14 @@ docs/
 
 | Requirement                                                      | Diagram (docs/) | Code                                                                       | Tests                                           |
 | ---------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------- | ----------------------------------------------- |
-| List events with name, description, company                      | 3               | `EventList.tsx`                                                            | `test/requirements/1-list.test.tsx`             |
-| Add form saving name, description, company, color; list updates  | 4               | `EventForm.tsx`, `useEvents.add`                                           | `2-add.test.tsx`                                |
-| Delete button; list updates                                      | 5               | `EventList.tsx`, `useEvents.remove`                                        | `3-delete.test.tsx`                             |
-| Error handling for API failures                                  | 8               | `eventsApi.ts` (axios rejects on non-2xx), `ErrorBanner.tsx`, every caller | `4-errors.test.tsx`, `api/eventsApi.test.ts`    |
-| Sort by company after loading                                    | 3               | `utils/sort.ts`, called in `useEvents.reload`                              | `5-sort.test.tsx`, `utils/sort.test.ts`         |
-| Update name, description, company, color                         | 6               | `EditEventPage.tsx`, `useEvent`                                            | `6-update.test.tsx`                             |
-| Individual event (name, description) in a modal via react-router | 2, 7            | `EventDetailModal.tsx`, route `/events/:id`                                | `7-detail.test.tsx`                             |
-| Validate inputs                                                  | 9               | `utils/validate.ts`, `EventForm.tsx`                                       | `8-validate.test.tsx`, `utils/validate.test.ts` |
+| List events with name, description, company                      | 3               | `EventList.jsx`                                                            | `test/requirements/1-list.test.jsx`             |
+| Add form saving name, description, company, color; list updates  | 4               | `EventForm.jsx`, `useEvents.add`                                           | `2-add.test.jsx`                                |
+| Delete button; list updates                                      | 5               | `EventList.jsx`, `useEvents.remove`                                        | `3-delete.test.jsx`                             |
+| Error handling for API failures                                  | 8               | `eventsApi.js` (axios rejects on non-2xx), `ErrorBanner.jsx`, every caller | `4-errors.test.jsx`, `api/eventsApi.test.js`    |
+| Sort by company after loading                                    | 3               | `utils/sort.js`, called in `useEvents.reload`                              | `5-sort.test.jsx`, `utils/sort.test.js`         |
+| Update name, description, company, color                         | 6               | `EditEventPage.jsx`, `useEvent`                                            | `6-update.test.jsx`                             |
+| Individual event (name, description) in a modal via react-router | 2, 7            | `EventDetailModal.jsx`, route `/events/:id`                                | `7-detail.test.jsx`                             |
+| Validate inputs                                                  | 9               | `utils/validate.js`, `EventForm.jsx`                                       | `8-validate.test.jsx`, `utils/validate.test.js` |
 
 ## Decisions worth knowing
 

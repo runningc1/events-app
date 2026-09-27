@@ -81,7 +81,7 @@ describe('eventsApi: request contract', () => {
 describe('eventsApi: failures reject with the HTTP status', () => {
   it.each([404, 500, 503])('rejects with status %i when the server returns it', async (status) => {
     failWith('get', status)
-    const err = await getAll().catch((e: unknown) => e)
+    const err = await getAll().catch((e) => e)
     expect(isAxiosError(err) && err.response?.status).toBe(status)
   })
 
@@ -95,7 +95,7 @@ describe('eventsApi: failures reject with the HTTP status', () => {
 
   it('rejects with no response when the network fails', async () => {
     failNetwork('post')
-    const err = await create(makeEvent()).catch((e: unknown) => e)
+    const err = await create(makeEvent()).catch((e) => e)
     expect(isAxiosError(err)).toBe(true)
     expect(isAxiosError(err) && err.response).toBeUndefined()
   })

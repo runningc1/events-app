@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import type { EventFormValues } from '../types'
 import { isNamedColor, NAMED_COLORS } from './colors'
 import { MAX_LENGTH, validateEvent } from './validate'
 
-const valid: EventFormValues = {
+const valid = {
   name: 'Launch',
   description: 'Big day',
   company: 'ACME',
@@ -15,7 +14,7 @@ describe('validateEvent', () => {
     expect(validateEvent(valid)).toEqual({})
   })
 
-  it.each(['name', 'description', 'company', 'color'] as const)('requires %s', (field) => {
+  it.each(['name', 'description', 'company', 'color'])('requires %s', (field) => {
     expect(validateEvent({ ...valid, [field]: '' })).toEqual({
       [field]: 'Required',
     })

@@ -27,7 +27,7 @@ jobs:
       - run: npm test
       # Pages serves the site under /events-app/. Pages has no SPA fallback, so 404.html
       # is a copy of index.html and react-router handles deep links like /events/3.
-      - run: npx tsc -b && npx vite build --base=/events-app/
+      - run: npx vite build --base=/events-app/
       - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v5
         with:

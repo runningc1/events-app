@@ -25,10 +25,7 @@ describe('4. API error handling', () => {
     )
 
     it('shows an error rather than hanging on Loading when a record has the wrong shape', async () => {
-      seed([
-        makeEvent({ id: 1 }),
-        { id: 2, company: 42 } as unknown as ReturnType<typeof makeEvent>,
-      ])
+      seed([makeEvent({ id: 1 }), { id: 2, company: 42 }])
       renderApp()
       expect(await screen.findByRole('table')).toBeInTheDocument()
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument()

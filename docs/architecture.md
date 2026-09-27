@@ -8,7 +8,7 @@ Who imports whom. Arrows point from the importer to the module it uses.
 
 ```mermaid
 flowchart TB
-  main[main.tsx<br/>BrowserRouter] --> App[App.tsx<br/>route table]
+  main[main.jsx<br/>BrowserRouter] --> App[App.jsx<br/>route table]
   App --> EventsPage["EventsPage  /"]
   App --> EditEventPage["EditEventPage  /events/:id/edit"]
   App --> Modal["EventDetailModal  /events/:id<br/>(child of /)"]
@@ -26,11 +26,11 @@ flowchart TB
   Modal --> EventImage
   Modal --> ErrorBanner
 
-  useEvents --> api[api/eventsApi.ts<br/>getAll getOne create update remove]
-  useEvents --> sort[utils/sort.ts]
-  EventForm --> validate[utils/validate.ts]
-  validate --> colors[utils/colors.ts]
-  EventsPage --> events[utils/events.ts<br/>buildNewEvent]
+  useEvents --> api[api/eventsApi.js<br/>getAll getOne create update remove]
+  useEvents --> sort[utils/sort.js]
+  EventForm --> validate[utils/validate.js]
+  validate --> colors[utils/colors.js]
+  EventsPage --> events[utils/events.js<br/>buildNewEvent]
   EditEventPage --> events
 
   api -->|axios, Content-Type: application/json| Server[(rf-json-server<br/>/events)]
@@ -178,7 +178,7 @@ flowchart TB
   call[api call] --> axios{axios}
   axios -->|no response| net["AxiosError, response undefined ('Network Error')"]
   axios -->|non-2xx| http["AxiosError, response.status = N"]
-  axios -->|2xx| data[typed data]
+  axios -->|2xx| data[response data]
   data -->|getAll: not an array| bad["Error('Response was not a list of events')"]
 
   net & http & bad --> caller{who called?}

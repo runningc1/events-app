@@ -9,8 +9,8 @@ import { EventImage } from './EventImage'
 export function EventDetailModal() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const dialogRef = useRef<HTMLDialogElement>(null)
-  const { event, error } = useEvent(id!)
+  const dialogRef = useRef(null)
+  const { event, error } = useEvent(id)
 
   const close = () => navigate('/')
 

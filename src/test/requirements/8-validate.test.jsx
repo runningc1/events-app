@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { fillForm, renderApp, VALID } from '../helpers'
 import { captureRequests, db, seed } from '../server'
 
-// Requirement: Validate inputs. (Rule-level cases are in utils/validate.test.ts;
+// Requirement: Validate inputs. (Rule-level cases are in utils/validate.test.js;
 // these cover the form behaviour the user sees.)
 describe('8. Input validation in the form', () => {
   beforeEach(() => seed())
@@ -60,10 +60,10 @@ describe('8. Input validation in the form', () => {
     await screen.findByRole('table')
     const input = screen.getByLabelText('color')
     expect(input).toHaveAttribute('placeholder', expect.stringMatching(/red, steelblue/))
-    const listId = input.getAttribute('list')!
+    const listId = input.getAttribute('list')
     const options = document.querySelectorAll(`datalist[id="${listId}"] option`)
     expect(options).toHaveLength(148)
-    expect([...options].map((o) => (o as HTMLOptionElement).value)).toContain('steelblue')
+    expect([...options].map((o) => o.value)).toContain('steelblue')
   })
 
   it.each(['red', 'Red', 'STEELBLUE', ' teal '])('accepts color %j', async (color) => {

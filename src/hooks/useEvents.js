@@ -1,15 +1,14 @@
 import axios from 'axios'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as api from '../api/eventsApi'
-import type { EventRecord, NewEvent } from '../types'
 import { sortByCompany } from '../utils/sort'
 
 // Loads the list, sorts it by company, and refetches after every mutation
 // so the list always reflects the server. `events` is null until the first load finishes.
 export function useEvents() {
-  const [events, setEvents] = useState<EventRecord[] | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [pendingIds, setPendingIds] = useState<number[]>([])
+  const [events, setEvents] = useState(null)
+  const [error, setError] = useState(null)
+  const [pendingIds, setPendingIds] = useState([])
   const latest = useRef(0)
 
   // Resolves true when the list was refreshed. Overlapping reloads can resolve out of
@@ -26,7 +25,7 @@ export function useEvents() {
         setError(null)
         return true
       })
-      .catch((err: Error) => {
+      .catch((err) => {
         if (token === latest.current) setError(`Could not load events. ${err.message}`)
         return false
       })
@@ -40,12 +39,12 @@ export function useEvents() {
   // run it, then refetch. Resolves false if either step failed so callers can react.
   // A 404 means the server changed underneath us, so the list is refetched even on failure.
   const mutate = useCallback(
-    async (label: string, action: () => Promise<unknown>): Promise<boolean> => {
+    async (label, action) => {
       try {
         await action()
       } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 404) await reload()
-        setError(`Could not ${label}. ${(err as Error).message}`)
+        setError(`Could not ${label}. ${err.message}`)
         return false
       }
       return reload()
@@ -53,15 +52,12 @@ export function useEvents() {
     [reload],
   )
 
-  const add = useCallback(
-    (event: NewEvent) => mutate('add event', () => api.create(event)),
-    [mutate],
-  )
+  const add = useCallback((event) => mutate('add event', () => api.create(event)), [mutate])
 
   // pendingIds lets the list disable a row's Delete button while its request is in flight,
   // so a double-click cannot send a second DELETE that 404s.
   const remove = useCallback(
-    async (id: number) => {
+    async (id) => {
       setPendingIds((ids) => [...ids, id])
       try {
         return await mutate('delete event', () => api.remove(id))

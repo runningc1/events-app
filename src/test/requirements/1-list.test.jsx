@@ -20,7 +20,7 @@ describe('1. List page', () => {
       { name: 'Event 2', description: 'First event', company: 'anocha' },
       { name: 'Event 3', description: 'First event', company: 'Geekfarm' },
     ]) {
-      const row = screen.getByRole('link', { name: e.name }).closest('tr')!
+      const row = screen.getByRole('link', { name: e.name }).closest('tr')
       expect(within(row).getByText(e.description)).toBeInTheDocument()
       expect(within(row).getByText(e.company)).toBeInTheDocument()
     }
@@ -34,7 +34,7 @@ describe('1. List page', () => {
   })
 
   it('renders records that are missing optional fields without crashing', async () => {
-    seed([{ id: 9, name: 'Sparse', company: 'ZED' } as ReturnType<typeof makeEvent>])
+    seed([{ id: 9, name: 'Sparse', company: 'ZED' }])
     renderApp()
     expect(await screen.findByRole('link', { name: 'Sparse' })).toBeInTheDocument()
     expect(screen.getByText('ZED')).toBeInTheDocument()

@@ -11,7 +11,7 @@ describe('6. Update event', () => {
   it('Edit link opens /events/{id}/edit with the current values filled in', async () => {
     renderApp()
     await screen.findByRole('table')
-    const row = screen.getByRole('link', { name: 'Event 2' }).closest('tr')!
+    const row = screen.getByRole('link', { name: 'Event 2' }).closest('tr')
     await userEvent.click(within(row).getByRole('link', { name: 'Edit' }))
 
     expect(await screen.findByRole('heading', { name: 'Edit event' })).toBeInTheDocument()
@@ -34,12 +34,12 @@ describe('6. Update event', () => {
     })
     await user.click(screen.getByRole('button', { name: 'Save' }))
 
-    const row = (await screen.findByRole('link', { name: 'Renamed' })).closest('tr')!
+    const row = (await screen.findByRole('link', { name: 'Renamed' })).closest('tr')
     expect(within(row).getByText('New text')).toBeInTheDocument()
     expect(within(row).getByText('NEWCO')).toBeInTheDocument()
     expect(within(row).getByText('navy')).toBeInTheDocument()
 
-    const put = requests.find((r) => r.method === 'PUT')!
+    const put = requests.find((r) => r.method === 'PUT')
     expect(put.url).toMatch(/\/2$/)
     expect(put.headers.get('content-type')).toBe('application/json')
     const body = await put.json()

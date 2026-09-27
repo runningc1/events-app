@@ -1,40 +1,32 @@
-import { useId, useState, type FormEvent } from 'react'
-import { EVENT_FIELDS, type EventFormErrors, type EventFormValues } from '../types'
+import { useId, useState } from 'react'
+import { EVENT_FIELDS } from '../types'
 import { NAMED_COLORS } from '../utils/colors'
 import { normalizeValues } from '../utils/events'
 import { validateEvent } from '../utils/validate'
 
-interface Props {
-  initial?: EventFormValues
-  submitLabel: string
-  // Receives normalized values. Resolve true on success, false to keep the form as is.
-  onSubmit: (values: EventFormValues) => Promise<boolean>
-  onCancel?: () => void
-  resetOnSuccess?: boolean
-}
-
-const EMPTY: EventFormValues = { name: '', description: '', company: '', color: '' }
+const EMPTY = { name: '', description: '', company: '', color: '' }
 
 // One form for both add and edit. The pages supply initial values, a label and an
 // onSubmit; the fields, normalization, validation and error display exist once.
 export function EventForm({
   initial = EMPTY,
   submitLabel,
+  // Receives normalized values. Resolve true on success, false to keep the form as is.
   onSubmit,
   onCancel,
   resetOnSuccess = false,
-}: Props) {
+}) {
   const uid = useId()
   const [values, setValues] = useState(initial)
-  const [errors, setErrors] = useState<EventFormErrors>({})
+  const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
 
-  const set = (field: keyof EventFormValues, value: string) => {
+  const set = (field, value) => {
     setValues((v) => ({ ...v, [field]: value }))
     if (errors[field]) setErrors((e) => ({ ...e, [field]: undefined }))
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const normalized = normalizeValues(values)
     const found = validateEvent(normalized)

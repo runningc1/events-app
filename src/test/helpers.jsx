@@ -13,7 +13,7 @@ export const renderApp = (initialPath = '/') =>
   )
 
 // Clears and types into the labelled inputs. Returns the user-event instance for further actions.
-export const fillForm = async (values: Record<string, string>) => {
+export const fillForm = async (values) => {
   const user = userEvent.setup()
   for (const [field, value] of Object.entries(values)) {
     const input = screen.getByLabelText(field)

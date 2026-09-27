@@ -1,5 +1,5 @@
 // The 148 CSS named colors (CSS Color Module Level 4), lower-case.
-export const NAMED_COLORS: ReadonlySet<string> = new Set(
+export const NAMED_COLORS = new Set(
   `
   aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet
   brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan
@@ -23,4 +23,4 @@ export const NAMED_COLORS: ReadonlySet<string> = new Set(
     .filter(Boolean),
 )
 
-export const isNamedColor = (value: string): boolean => NAMED_COLORS.has(value.trim().toLowerCase())
+export const isNamedColor = (value) => NAMED_COLORS.has(value.trim().toLowerCase())
