@@ -50,7 +50,7 @@ describe('4. API error handling', () => {
     it('shows an error when the response is not JSON', async () => {
       server.use(http.get(API_BASE, () => new HttpResponse('<html>', { status: 200 })))
       renderApp()
-      expect(await screen.findByRole('alert')).toHaveTextContent(/not valid JSON/)
+      expect(await screen.findByRole('alert')).toHaveTextContent('Could not load events')
     })
 
     it('Retry reloads the list and clears the error once the API recovers', async () => {

@@ -33,7 +33,7 @@ flowchart TB
   EventsPage --> events[utils/events.ts<br/>buildNewEvent]
   EditEventPage --> events
 
-  api -->|fetch, Content-Type: application/json| Server[(rf-json-server<br/>/events)]
+  api -->|axios, Content-Type: application/json| Server[(rf-json-server<br/>/events)]
 ```
 
 ## 2. Routes
@@ -171,17 +171,15 @@ sequenceDiagram
 
 ## 8. Error handling
 
-Every request goes through one `request()` function. `fetch` only rejects on network failure, so non-2xx responses are turned into errors by hand.
+Every request is one axios call. axios rejects on network failure and on any non-2xx status, so the API module has no error handling of its own. `useEvents.reload` adds one check: a 200 whose body is not an array is treated as an error rather than rendered.
 
 ```mermaid
 flowchart TB
-  call[api call] --> fetch{fetch}
-  fetch -->|throws| net["ApiError(status 0, 'Network error: ...')"]
-  fetch -->|response| ok{res.ok?}
-  ok -->|no| http["ApiError(status, 'Request failed with status N')"]
-  ok -->|yes| json{res.json parses?}
-  json -->|no| bad["ApiError(status, 'Response was not valid JSON')"]
-  json -->|yes| data[typed data]
+  call[api call] --> axios{axios}
+  axios -->|no response| net["AxiosError, response undefined ('Network Error')"]
+  axios -->|non-2xx| http["AxiosError, response.status = N"]
+  axios -->|2xx| data[typed data]
+  data -->|getAll: not an array| bad["Error('Response was not a list of events')"]
 
   net & http & bad --> caller{who called?}
   caller -->|useEvents.reload| e1["ErrorBanner 'Could not load events' + Retry"]

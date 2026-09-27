@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { API_BASE, ApiError, create, getAll, getOne, remove, update } from './eventsApi'
+import { isAxiosError } from 'axios'
+import { API_BASE, create, getAll, getOne, remove, update } from './eventsApi'
 import {
   captureRequests,
   db,
@@ -73,47 +74,35 @@ describe('eventsApi: request contract', () => {
 
   it('treats a 204 with no body as success', async () => {
     server.use(http.delete(`${API_BASE}/1`, () => new HttpResponse(null, { status: 204 })))
-    await expect(remove(1)).resolves.toBeUndefined()
+    await expect(remove(1)).resolves.toMatchObject({ status: 204 })
   })
 })
 
-describe('eventsApi: failures become ApiError', () => {
+describe('eventsApi: failures reject with the HTTP status', () => {
   it.each([404, 500, 503])('rejects with status %i when the server returns it', async (status) => {
     failWith('get', status)
     const err = await getAll().catch((e: unknown) => e)
-    expect(err).toBeInstanceOf(ApiError)
-    expect((err as ApiError).status).toBe(status)
-    expect((err as ApiError).message).toContain(String(status))
+    expect(isAxiosError(err) && err.response?.status).toBe(status)
   })
 
-  it('getOne on a missing id rejects with 404 (server returns {} with 404)', async () => {
-    await expect(getOne(999)).rejects.toMatchObject({ status: 404 })
+  it.each([
+    ['getOne', () => getOne(999)],
+    ['update', () => update(999, makeEvent({ id: 999 }))],
+    ['remove', () => remove(999)],
+  ])('%s on a missing id rejects with 404', async (_name, call) => {
+    await expect(call()).rejects.toMatchObject({ response: { status: 404 } })
   })
 
-  it('update on a missing id rejects with 404', async () => {
-    await expect(update(999, makeEvent({ id: 999 }))).rejects.toMatchObject({ status: 404 })
-  })
-
-  it('remove on a missing id rejects with 404', async () => {
-    await expect(remove(999)).rejects.toMatchObject({ status: 404 })
-  })
-
-  it('rejects with status 0 when the network fails', async () => {
+  it('rejects with no response when the network fails', async () => {
     failNetwork('post')
     const err = await create(makeEvent()).catch((e: unknown) => e)
-    expect(err).toBeInstanceOf(ApiError)
-    expect((err as ApiError).status).toBe(0)
-    expect((err as ApiError).message).toMatch(/network/i)
-  })
-
-  it('rejects when a 200 response body is not JSON', async () => {
-    server.use(http.get(API_BASE, () => new HttpResponse('<html>oops</html>', { status: 200 })))
-    await expect(getAll()).rejects.toMatchObject({ status: 200, message: /not valid JSON/ })
+    expect(isAxiosError(err)).toBe(true)
+    expect(isAxiosError(err) && err.response).toBeUndefined()
   })
 
   it('does not mutate the store when the request fails', async () => {
     failWith('delete', 500, '/1')
-    await expect(remove(1)).rejects.toBeInstanceOf(ApiError)
+    await expect(remove(1)).rejects.toMatchObject({ response: { status: 500 } })
     expect(db).toHaveLength(3)
   })
 })

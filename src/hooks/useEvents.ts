@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as api from '../api/eventsApi'
 import type { EventRecord, NewEvent } from '../types'
@@ -18,6 +19,8 @@ export function useEvents() {
     return api
       .getAll()
       .then((list) => {
+        // The server is shared and unvalidated; a non-list body must show as an error, not a blank table.
+        if (!Array.isArray(list)) throw new Error('Response was not a list of events')
         if (token !== latest.current) return true
         setEvents(sortByCompany(list))
         setError(null)
@@ -41,7 +44,7 @@ export function useEvents() {
       try {
         await action()
       } catch (err) {
-        if ((err as api.ApiError).status === 404) await reload()
+        if (axios.isAxiosError(err) && err.response?.status === 404) await reload()
         setError(`Could not ${label}. ${(err as Error).message}`)
         return false
       }
