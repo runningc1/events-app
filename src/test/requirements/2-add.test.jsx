@@ -59,7 +59,7 @@ describe('2. Add event', () => {
   it('the list page links to the add page with a plus sign', async () => {
     renderApp()
     await screen.findByRole('table')
-    const link = screen.getByRole('link', { name: 'Add event' })
+    const link = screen.getByRole('link', { name: 'Add New' })
     expect(link).toHaveTextContent('+')
     expect(link).toHaveAttribute('href', '/events/add')
   })

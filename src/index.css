@@ -13,10 +13,18 @@ header.page-header {
 }
 
 .add-link {
-  font-size: 2rem;
-  line-height: 1;
+  display: inline-block;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
   text-decoration: none;
-  padding: 0 0.5rem;
+  color: inherit;
+  font: inherit;
+}
+
+.add-link span {
+  font-size: 1.25em;
+  line-height: 1;
 }
 
 form {

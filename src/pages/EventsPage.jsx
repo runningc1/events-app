@@ -10,8 +10,8 @@ export function EventsPage() {
     <main>
       <header className="page-header">
         <h1>Events</h1>
-        <Link to="/events/add" className="add-link" aria-label="Add event">
-          +
+        <Link to="/events/add" className="add-link">
+          <span aria-hidden="true">+</span> Add New
         </Link>
       </header>
       <ErrorBanner message={error} onRetry={reload} />
