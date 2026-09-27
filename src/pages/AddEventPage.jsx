@@ -16,10 +16,9 @@ export function AddEventPage() {
       await create(buildNewEvent(values))
     } catch (err) {
       setError(`Could not add event. ${err.message}`)
-      return false
+      return
     }
     navigate('/')
-    return true
   }
 
   return (

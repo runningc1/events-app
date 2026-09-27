@@ -11,10 +11,9 @@ const EMPTY = { name: '', description: '', company: '', color: '' }
 export function EventForm({
   initial = EMPTY,
   submitLabel,
-  // Receives normalized values. Resolve true on success, false to keep the form as is.
+  // Receives normalized values. The page decides what happens after.
   onSubmit,
   onCancel,
-  resetOnSuccess = false,
 }) {
   const uid = useId()
   const [values, setValues] = useState(initial)
@@ -33,9 +32,8 @@ export function EventForm({
     setErrors(found)
     if (Object.keys(found).length > 0) return
     setSubmitting(true)
-    const ok = await onSubmit(normalized)
+    await onSubmit(normalized)
     setSubmitting(false)
-    if (ok && resetOnSuccess) setValues(EMPTY)
   }
 
   return (

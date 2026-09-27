@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { update } from '../api/eventsApi'
 import { ErrorBanner } from '../components/ErrorBanner'
 import { EventForm } from '../components/EventForm'
@@ -19,10 +19,9 @@ export function EditEventPage() {
       await update(event.id, { ...event, ...values })
     } catch (err) {
       setSaveError(`Could not update event. ${err.message}`)
-      return false
+      return
     }
     navigate('/')
-    return true
   }
 
   return (
@@ -44,7 +43,6 @@ export function EditEventPage() {
       ) : (
         !loadError && <p>Loading...</p>
       )}
-      <Link to="/">Back to events</Link>
     </main>
   )
 }
