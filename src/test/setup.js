@@ -11,7 +11,6 @@ afterEach(() => {
 })
 afterAll(() => server.close())
 
-// jsdom does not implement <dialog>.showModal/close; stub them so the modal can mount.
 if (!HTMLDialogElement.prototype.showModal) {
   HTMLDialogElement.prototype.showModal = function () {
     this.setAttribute('open', '')

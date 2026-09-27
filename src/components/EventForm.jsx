@@ -6,12 +6,9 @@ import { validateEvent } from '../utils/validate'
 
 const EMPTY = { name: '', description: '', company: '', color: '' }
 
-// One form for both add and edit. The pages supply initial values, a label and an
-// onSubmit; the fields, normalization, validation and error display exist once.
 export function EventForm({
   initial = EMPTY,
   submitLabel,
-  // Receives normalized values. The page decides what happens after.
   onSubmit,
   onCancel,
 }) {

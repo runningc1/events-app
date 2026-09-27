@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getOne } from '../api/eventsApi'
 
-// Loads one event for the detail modal and the edit page. `stale` stops a slow response
-// for a previous id from overwriting the current one.
 export function useEvent(id) {
   const [event, setEvent] = useState(null)
   const [error, setError] = useState(null)

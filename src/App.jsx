@@ -4,7 +4,6 @@ import { AddEventPage } from './pages/AddEventPage'
 import { EditEventPage } from './pages/EditEventPage'
 import { EventsPage } from './pages/EventsPage'
 
-// /events/:id is nested under / so the detail modal renders over the list.
 export default function App() {
   return (
     <Routes>

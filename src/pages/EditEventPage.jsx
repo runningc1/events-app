@@ -11,8 +11,6 @@ export function EditEventPage() {
   const { event, error: loadError } = useEvent(id)
   const [saveError, setSaveError] = useState(null)
 
-  // GET then PUT: json-server PUT replaces the record, so a 4-field PUT would wipe the rest
-  // and PATCH is not what the assignment asks for. Then back to the list, which refetches.
   const save = async (values) => {
     setSaveError(null)
     try {

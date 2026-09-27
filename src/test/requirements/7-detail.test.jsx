@@ -4,8 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { renderApp } from '../helpers'
 import { captureRequests, makeEvent, seed, slow } from '../server'
 
-// Requirement: Load and display individual event info (name, description) in a modal
-// or on a new page with the use of react-router.
 describe('7. Individual event modal (routed)', () => {
   beforeEach(() => seed())
 
@@ -20,8 +18,8 @@ describe('7. Individual event modal (routed)', () => {
     expect(dialog).toHaveAttribute('open')
     expect(await within(dialog).findByRole('heading', { name: 'Event 2' })).toBeInTheDocument()
     expect(within(dialog).getByText('First event')).toBeInTheDocument()
-    expect(requests[0].url).toMatch(/\/events\/2$/) // loaded via GET /events/{id}
-    expect(screen.getByRole('table')).toBeInTheDocument() // list stays underneath
+    expect(requests[0].url).toMatch(/\/events\/2$/)
+    expect(screen.getByRole('table')).toBeInTheDocument()
   })
 
   it('a direct link to /events/{id} opens the modal on load', async () => {

@@ -3,8 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import App from '../App'
 
-// Renders the whole app at a URL, so tests exercise real routing. Every requirement test
-// starts here, so the router wrapper is set up once rather than in each file.
 export const renderApp = (initialPath = '/') =>
   render(
     <MemoryRouter initialEntries={[initialPath]}>
@@ -12,7 +10,6 @@ export const renderApp = (initialPath = '/') =>
     </MemoryRouter>,
   )
 
-// Clears and types into the labelled inputs. Returns the user-event instance for further actions.
 export const fillForm = async (values) => {
   const user = userEvent.setup()
   for (const [field, value] of Object.entries(values)) {

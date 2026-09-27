@@ -4,8 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { fillForm, renderApp, VALID } from '../helpers'
 import { captureRequests, db, seed } from '../server'
 
-// Requirement: Validate inputs. (Rule-level cases are in utils/validate.test.js;
-// these cover the form behaviour the user sees.)
 describe('8. Input validation in the form', () => {
   beforeEach(() => seed())
 

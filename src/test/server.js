@@ -2,11 +2,6 @@ import { delay, http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import { API_BASE } from '../api/eventsApi'
 
-// Shared by every test file: one fake server, seeded per test, instead of per-test fetch mocks.
-// In-memory stand-in for rf-json-server. Status codes and bodies match what the
-// real server returned when probed on 2026-09-24:
-//   GET /events 200, GET /events/:id 404 {} when missing, POST 201 (assigns id),
-//   PUT 200 replacing the whole record (404 {} when missing), DELETE 200 {} (404 {} when missing).
 export let db = []
 
 export const makeEvent = (overrides = {}) => ({
@@ -26,7 +21,6 @@ export const makeEvent = (overrides = {}) => ({
   ...overrides,
 })
 
-// Three events whose ids are deliberately out of company order, to catch a missing sort.
 export const SEED = [
   makeEvent({ id: 1, name: 'Event 1', company: 'ZILCH', color: 'green' }),
   makeEvent({ id: 2, name: 'Event 2', company: 'anocha', color: 'blue' }),
@@ -73,13 +67,11 @@ export const handlers = [
 
 export const server = setupServer(...handlers)
 
-// Make one route fail for the rest of the current test.
 export const failWith = (method, status, path = '') =>
   server.use(
     http[method](`${API_BASE}${path}`, () => HttpResponse.json({ error: 'boom' }, { status })),
   )
 
-// Delay one route's normal response so in-flight UI states can be asserted.
 export const slow = (method, path = '', ms = 100) =>
   server.use(
     http[method](`${API_BASE}${path}`, async () => {
@@ -90,7 +82,6 @@ export const slow = (method, path = '', ms = 100) =>
 export const failNetwork = (method, path = '') =>
   server.use(http[method](`${API_BASE}${path}`, () => HttpResponse.error()))
 
-// Records every request so tests can assert on method, URL, headers and body.
 export const captureRequests = () => {
   const requests = []
   server.events.on('request:start', ({ request }) => {

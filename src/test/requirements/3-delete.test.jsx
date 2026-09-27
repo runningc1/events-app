@@ -6,7 +6,6 @@ import { API_BASE } from '../../api/eventsApi'
 import { renderApp } from '../helpers'
 import { captureRequests, db, seed, SEED, server, slow } from '../server'
 
-// Requirement: A delete link/button to remove an event and update the list after deletion.
 describe('3. Delete event', () => {
   beforeEach(() => seed())
 
@@ -63,7 +62,6 @@ describe('3. Delete event', () => {
   it('two quick deletes: a stale refetch response cannot overwrite the newer list', async () => {
     renderApp()
     await screen.findByRole('table')
-    // The first refetch snapshots the list, then answers late, after the second refetch.
     server.use(
       http.get(
         API_BASE,
@@ -79,7 +77,7 @@ describe('3. Delete event', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Delete Event 2' }))
 
     await waitFor(() => expect(screen.queryByRole('link', { name: 'Event 2' })).toBeNull())
-    await new Promise((r) => setTimeout(r, 300)) // let the stale response arrive
+    await new Promise((r) => setTimeout(r, 300))
     expect(screen.queryByRole('link', { name: 'Event 1' })).toBeNull()
     expect(screen.queryByRole('link', { name: 'Event 2' })).toBeNull()
     expect(screen.getAllByRole('row')).toHaveLength(2)

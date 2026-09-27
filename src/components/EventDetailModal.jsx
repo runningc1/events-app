@@ -4,8 +4,6 @@ import { useEvent } from '../hooks/useEvent'
 import { ErrorBanner } from './ErrorBanner'
 import { EventImage } from './EventImage'
 
-// Rendered by the /events/:id route on top of the list. Opening and closing are
-// URL changes, so the browser back button and direct links both work.
 export function EventDetailModal() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -19,8 +17,6 @@ export function EventDetailModal() {
     if (dialog && !dialog.open) dialog.showModal()
   }, [])
 
-  // A click whose target is the <dialog> itself landed on the backdrop, because
-  // .dialog-body covers the whole dialog (dialog has no padding of its own).
   return (
     <dialog
       ref={dialogRef}

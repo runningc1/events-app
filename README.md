@@ -35,42 +35,43 @@ CodeSandbox no longer imports repositories directly. Create a React Devbox from 
 ```
 src/
   api/eventsApi.js          axios calls: getAll, getOne, create, update, remove
-  hooks/useEvents.js        loads the list, sorts by company, refetches after add/delete
+  hooks/useEvents.js        loads the list, sorts by company, deletes and refetches
   hooks/useEvent.js         loads one event for the modal and the edit page
   utils/validate.js         validateEvent: required fields, length, CSS named color
   utils/colors.js           the 148 CSS named colors
   utils/sort.js             sortByCompany
   utils/events.js           normalizeValues, buildNewEvent (POST body)
+  types.js                  EVENT_FIELDS, the four editable fields
   components/EventList.jsx  table: name (link to detail), description, company, color, edit, delete
   components/EventForm.jsx  shared by add and edit; validates on submit
   components/EventDetailModal.jsx  routed <dialog> at /events/:id
+  components/EventImage.jsx image with a placeholder on error
   components/ErrorBanner.jsx
-  pages/EventsPage.jsx      /            list + add form; hosts the modal route
+  pages/EventsPage.jsx      /                 list; hosts the modal route
+  pages/AddEventPage.jsx    /events/add
   pages/EditEventPage.jsx   /events/:id/edit
   App.jsx                   routes
   test/                     msw server, helpers, and one test file per requirement
-docs/
-  architecture.md           module map, routes, data flow per operation, error handling, validation
-  *.svg                     the same diagrams rendered
+docs/                       data-flow diagrams (SVG)
 ```
 
 ## Requirements and where each one lives
 
-| Requirement                                                      | Diagram (docs/) | Code                                                                       | Tests                                           |
-| ---------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------- | ----------------------------------------------- |
-| List events with name, description, company                      | 3               | `EventList.jsx`                                                            | `test/requirements/1-list.test.jsx`             |
-| Add form saving name, description, company, color; list updates  | 4               | `EventForm.jsx`, `useEvents.add`                                           | `2-add.test.jsx`                                |
-| Delete button; list updates                                      | 5               | `EventList.jsx`, `useEvents.remove`                                        | `3-delete.test.jsx`                             |
-| Error handling for API failures                                  | 8               | `eventsApi.js` (axios rejects on non-2xx), `ErrorBanner.jsx`, every caller | `4-errors.test.jsx`, `api/eventsApi.test.js`    |
-| Sort by company after loading                                    | 3               | `utils/sort.js`, called in `useEvents.reload`                              | `5-sort.test.jsx`, `utils/sort.test.js`         |
-| Update name, description, company, color                         | 6               | `EditEventPage.jsx`, `useEvent`                                            | `6-update.test.jsx`                             |
-| Individual event (name, description) in a modal via react-router | 2, 7            | `EventDetailModal.jsx`, route `/events/:id`                                | `7-detail.test.jsx`                             |
-| Validate inputs                                                  | 9               | `utils/validate.js`, `EventForm.jsx`                                       | `8-validate.test.jsx`, `utils/validate.test.js` |
+| Requirement                                                      | Code                                                                       | Tests                                           |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------- |
+| List events with name, description, company                      | `EventList.jsx`                                                            | `test/requirements/1-list.test.jsx`             |
+| Add form saving name, description, company, color; list updates  | `AddEventPage.jsx`, `EventForm.jsx`                                        | `2-add.test.jsx`                                |
+| Delete button; list updates                                      | `EventList.jsx`, `useEvents.remove`                                        | `3-delete.test.jsx`                             |
+| Error handling for API failures                                  | `eventsApi.js` (axios rejects on non-2xx), `ErrorBanner.jsx`, every caller | `4-errors.test.jsx`, `api/eventsApi.test.js`    |
+| Sort by company after loading                                    | `utils/sort.js`, called in `useEvents.reload`                              | `5-sort.test.jsx`, `utils/sort.test.js`         |
+| Update name, description, company, color                         | `EditEventPage.jsx`, `useEvent`                                            | `6-update.test.jsx`                             |
+| Individual event (name, description) in a modal via react-router | `EventDetailModal.jsx`, route `/events/:id`                                | `7-detail.test.jsx`                             |
+| Validate inputs                                                  | `utils/validate.js`, `EventForm.jsx`                                       | `8-validate.test.jsx`, `utils/validate.test.js` |
 
 ## Decisions worth knowing
 
 - The modal is opened and closed by the URL (`/events/:id`), not by local state. Back button and direct links work.
-- After add or delete the list is refetched from the server rather than patched locally, so "update the list" is true by construction.
+- Add and edit are their own pages; on success they navigate back to the list, which fetches on mount. Delete refetches. The list is never patched locally, so "update the list" is true by construction.
 - POST never sends `id`. PUT sends the full record because json-server PUT replaces the record; a partial PUT wipes the other fields (verified against the live server).
 - POST and PUT send `Content-Type: application/json`; without it the server stores the raw JSON string as a field name. GET and DELETE do not send it, which keeps them free of a CORS preflight.
 - Refetches carry a request token; a response that is no longer the latest is ignored. A row's Delete button is disabled while its request is in flight. A 404 on a mutation triggers a refetch because the server changed underneath the UI.

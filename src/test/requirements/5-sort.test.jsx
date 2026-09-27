@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { fillForm, renderApp } from '../helpers'
 import { makeEvent, seed } from '../server'
 
-// Requirement: Sort by company name after loading.
 const companyColumn = () =>
   within(screen.getByRole('table'))
     .getAllByRole('row')
@@ -17,7 +16,6 @@ describe('5. Sort by company', () => {
   it('shows events sorted by company even though the API returns them in id order', async () => {
     renderApp()
     await screen.findByRole('table')
-    // API order is ZILCH, anocha, Geekfarm (ids 1, 2, 3).
     expect(companyColumn()).toEqual(['anocha', 'Geekfarm', 'ZILCH'])
   })
 
@@ -43,12 +41,12 @@ describe('5. Sort by company', () => {
   it('keeps the list sorted after deleting', async () => {
     renderApp()
     await screen.findByRole('table')
-    await userEvent.click(screen.getByRole('button', { name: 'Delete Event 3' })) // Geekfarm
+    await userEvent.click(screen.getByRole('button', { name: 'Delete Event 3' }))
     await waitFor(() => expect(companyColumn()).toEqual(['anocha', 'ZILCH']))
   })
 
   it('re-sorts after an edit changes the company', async () => {
-    renderApp('/events/2/edit') // anocha, currently first
+    renderApp('/events/2/edit')
     await screen.findByRole('button', { name: 'Save' })
     const user = await fillForm({ company: 'Zzz Corp' })
     await user.click(screen.getByRole('button', { name: 'Save' }))

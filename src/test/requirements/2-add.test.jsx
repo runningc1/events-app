@@ -3,9 +3,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { fillForm, renderApp, VALID } from '../helpers'
 import { captureRequests, db, seed, slow } from '../server'
 
-// Requirement: A form to add a new event and update the list after addition.
-// At a minimum, save name, description, company, color (a web safe named color).
-
 describe('2. Add event', () => {
   beforeEach(() => seed())
 

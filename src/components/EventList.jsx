@@ -23,7 +23,6 @@ export function EventList({ events, pendingIds, onDelete }) {
             <td>{e.description}</td>
             <td>{e.company}</td>
             <td>
-              {/* Only a known color name reaches the style attribute; the server is shared and unvalidated. */}
               {isNamedColor(String(e.color ?? '')) && (
                 <span className="swatch" style={{ background: e.color }} />
               )}{' '}

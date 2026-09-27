@@ -21,7 +21,7 @@ describe('normalizeValues', () => {
 
 describe('buildNewEvent', () => {
   it('produces a full record with local date and time and no id', () => {
-    const now = new Date(2026, 8, 24, 19, 5) // local 2026-09-24 19:05
+    const now = new Date(2026, 8, 24, 19, 5)
     const event = buildNewEvent(values, now)
     expect(event).not.toHaveProperty('id')
     expect(event).toMatchObject({

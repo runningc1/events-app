@@ -1,4 +1,3 @@
-/* Deliberately minimal: the assignment says not to over-style. */
 body {
   font-family: system-ui, sans-serif;
   margin: 0 auto;
@@ -82,7 +81,6 @@ td {
   vertical-align: middle;
 }
 
-/* No padding on the dialog itself: a click on padding would count as a backdrop click. */
 dialog {
   max-width: 400px;
   padding: 0;

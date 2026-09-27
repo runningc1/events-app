@@ -9,7 +9,6 @@ export function AddEventPage() {
   const navigate = useNavigate()
   const [error, setError] = useState(null)
 
-  // POST, then back to the list, which refetches on mount. On failure the form keeps its values.
   const save = async (values) => {
     setError(null)
     try {

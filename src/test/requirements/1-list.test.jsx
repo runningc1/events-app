@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { renderApp } from '../helpers'
 import { makeEvent, seed } from '../server'
 
-// Requirement: A page to show a list of events. Display the name, description, company.
 describe('1. List page', () => {
   beforeEach(() => seed())
 
@@ -12,7 +11,7 @@ describe('1. List page', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument()
 
     const rows = await screen.findAllByRole('row')
-    expect(rows).toHaveLength(4) // header + 3 events
+    expect(rows).toHaveLength(4)
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
 
     for (const e of [

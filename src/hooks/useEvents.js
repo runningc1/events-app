@@ -3,22 +3,17 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import * as api from '../api/eventsApi'
 import { sortByCompany } from '../utils/sort'
 
-// Loads the list, sorts it by company, and refetches after every mutation
-// so the list always reflects the server. `events` is null until the first load finishes.
 export function useEvents() {
   const [events, setEvents] = useState(null)
   const [error, setError] = useState(null)
   const [pendingIds, setPendingIds] = useState([])
   const latest = useRef(0)
 
-  // Resolves true when the list was refreshed. Overlapping reloads can resolve out of
-  // order, so only the most recent request may touch state.
   const reload = useCallback(() => {
     const token = ++latest.current
     return api
       .getAll()
       .then((list) => {
-        // The server is shared and unvalidated; a non-list body must show as an error, not a blank table.
         if (!Array.isArray(list)) throw new Error('Response was not a list of events')
         if (token !== latest.current) return true
         setEvents(sortByCompany(list))
@@ -35,8 +30,6 @@ export function useEvents() {
     void reload()
   }, [reload])
 
-  // Run a mutation, then refetch. Resolves false if either step failed so callers can react.
-  // A 404 means the server changed underneath us, so the list is refetched even on failure.
   const mutate = useCallback(
     async (label, action) => {
       try {
@@ -51,8 +44,6 @@ export function useEvents() {
     [reload],
   )
 
-  // pendingIds lets the list disable a row's Delete button while its request is in flight,
-  // so a double-click cannot send a second DELETE that 404s.
   const remove = useCallback(
     async (id) => {
       setPendingIds((ids) => [...ids, id])

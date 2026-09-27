@@ -1,4 +1,3 @@
-// The 148 CSS named colors (CSS Color Module Level 4), lower-case.
 export const NAMED_COLORS = new Set(
   `
   aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet

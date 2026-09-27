@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-// Shows the event image, or a placeholder when the URL is empty or fails to load.
 export function EventImage({ src, alt }) {
   const [failed, setFailed] = useState(false)
   if (!src || failed) return <div className="image-placeholder">Image not found</div>

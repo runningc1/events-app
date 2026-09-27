@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { fillForm, renderApp } from '../helpers'
 import { captureRequests, db, seed } from '../server'
 
-// Requirement: Update an event. At a minimum, update the name, description, company, color.
 describe('6. Update event', () => {
   beforeEach(() => seed())
 
@@ -50,7 +49,6 @@ describe('6. Update event', () => {
       company: 'NEWCO',
       color: 'navy',
     })
-    // json-server PUT replaces the record, so untouched fields must be sent too.
     expect(body).toMatchObject({ email: 'a@geekfarm.com', isActive: true, date: '2021-01-05' })
     expect(db.find((e) => e.id === 2)).toEqual(body)
   })

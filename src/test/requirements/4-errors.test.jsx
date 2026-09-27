@@ -6,8 +6,6 @@ import { API_BASE } from '../../api/eventsApi'
 import { fillForm, renderApp, VALID } from '../helpers'
 import { db, failNetwork, failWith, makeEvent, seed, server } from '../server'
 
-// Requirement: Demonstrate error handling methodologies to account for API failures.
-// The real API rarely fails, so every failure is simulated here.
 describe('4. API error handling', () => {
   beforeEach(() => seed())
 
@@ -127,7 +125,7 @@ describe('4. API error handling', () => {
     it('reports 404 when the event was already deleted elsewhere, and refetches so the row goes away', async () => {
       renderApp()
       await screen.findByRole('table')
-      db.splice(0, 1) // someone else deleted Event 1
+      db.splice(0, 1)
       await userEvent.click(screen.getByRole('button', { name: 'Delete Event 1' }))
       expect(await screen.findByRole('alert')).toHaveTextContent('404')
       await waitFor(() =>

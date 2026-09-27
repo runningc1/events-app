@@ -3,9 +3,6 @@ import { isNamedColor } from './colors'
 
 export const MAX_LENGTH = 200
 
-// Returns an errors object. Empty object means valid. The single rule set for the app:
-// EventForm calls it for add and edit, so a rule change applies to both.
-// Expects normalized values (see normalizeValues); it does not trim.
 export function validateEvent(values) {
   const errors = {}
   for (const field of EVENT_FIELDS) {
