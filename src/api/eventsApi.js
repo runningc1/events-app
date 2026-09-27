@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-// One of five identical endpoints (suffix '', '-2' ... '-5'). Override with VITE_API_BASE.
 export const API_BASE =
   import.meta.env.VITE_API_BASE ?? 'https://rf-json-server.herokuapp.com/events'
 
