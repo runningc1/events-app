@@ -18,7 +18,6 @@ Other scripts:
 ```sh
 npm test               # unit and integration tests (vitest, jsdom, msw)
 npm run test:watch
-npm run test:coverage
 npm run lint           # oxlint
 npm run format         # prettier
 npm run build          # production build to dist/
